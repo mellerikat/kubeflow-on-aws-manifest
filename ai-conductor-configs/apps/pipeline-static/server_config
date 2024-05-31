@@ -1,0 +1,10 @@
+connection_config {
+  mysql {
+    host: 'rds-regionAlias-infraName-deployEnv-mysql.randomstring.region.rds.amazonaws.com'
+    port: 0000
+    database: 'metadb'
+    user: 'PROJECT_APP'
+    password: 'dbUserPW'
+    skip_db_creation: true
+ }
+}

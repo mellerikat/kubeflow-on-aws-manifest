@@ -4,7 +4,7 @@ cert-manager:
   installation_options:  
     kustomize:
       paths:  
-        - ../../upstream/common/cert-manager/cert-manager/base
+        - ../../ai-conductor-configs/common/cert-manager
     helm: 
       repo: remote
   validations:
@@ -40,7 +40,7 @@ istio:
       paths: 
         - ../../upstream/common/istio-1-16/istio-crds/base
         - ../../upstream/common/istio-1-16/istio-namespace/base
-        - ../../upstream/common/istio-1-16/istio-install/base
+        - ../../ai-conductor-configs/common/istio-1-16/istio-install
     helm: 
       paths: ../../charts/common/istio
   validations: 
@@ -55,7 +55,7 @@ dex:
   installation_options:
     kustomize:
       paths: 
-        - ../../upstream/common/dex/overlays/istio
+        - ../../ai-conductor-configs/common/dex
     helm: 
       paths: ../../charts/common/dex
   validations:
@@ -79,7 +79,7 @@ cluster-local-gateway:
   installation_options:
     kustomize:
       paths:
-        - ../../upstream/common/istio-1-16/cluster-local-gateway/base
+        - ../../ai-conductor-configs/common/istio-1-16/cluster-local-gateway
     helm: 
       paths: ../../charts/common/cluster-local-gateway
   validations:
@@ -94,7 +94,7 @@ knative-serving:
   installation_options:
     kustomize: 
       paths:
-        - ../../upstream/common/knative/knative-serving/overlays/gateways
+        - ../../ai-conductor-configs/common/knative/knative-serving
     helm: 
       paths: ../../charts/common/knative-serving
   validations:
@@ -111,7 +111,7 @@ knative-eventing:
   installation_options:
     kustomize:
       paths:
-        - ../../upstream/common/knative/knative-eventing/base
+        - ../../ai-conductor-configs/common/knative/knative-eventing
     helm: 
       paths: ../../charts/common/knative-eventing
   validations:
@@ -127,7 +127,7 @@ oidc-authservice:
   installation_options:
     kustomize:
       paths: 
-        - ../../upstream/common/oidc-client/oidc-authservice/base
+        - ../../ai-conductor-configs/common/oidc-authservice
     helm: 
       paths: ../../charts/common/oidc-authservice
   validations:
@@ -151,7 +151,7 @@ kserve:
   installation_options:
     kustomize:
       paths: 
-        - ../../awsconfigs/apps/kserve
+        - ../../ai-conductor-configs/apps/kserve/kserve
     helm: 
       paths: ../../charts/common/kserve
   validations:
@@ -168,7 +168,7 @@ models-web-app:
   installation_options:
     kustomize:
       paths:
-        - ../../upstream/contrib/kserve/models-web-app/overlays/kubeflow
+        - ../../ai-conductor-configs/apps/kserve/models-web-app
     helm: 
       paths: ../../charts/apps/models-web-app
   validations:
@@ -184,7 +184,7 @@ central-dashboard:
   installation_options:
     kustomize:
       paths: 
-        - ../../awsconfigs/apps/centraldashboard
+        - ../../ai-conductor-configs/apps/centraldashboard
     helm: 
       paths: ../../charts/apps/central-dashboard
   validations:
@@ -199,9 +199,9 @@ kubeflow-pipelines:
   installation_options:
     kustomize: 
       paths:
-        - ../../awsconfigs/apps/pipeline/
+        - ../../ai-conductor-configs/apps/pipeline-static/
     helm:
-      paths: ../../charts/apps/kubeflow-pipelines/rds-s3
+      paths: ../../charts/apps/kubeflow-pipelines/rds-s3-static
   validations:
     crds: 
       - compositecontrollers.metacontroller.k8s.io
@@ -217,7 +217,7 @@ admission-webhook:
   installation_options:
     kustomize:
       paths:
-        - ../../upstream/apps/admission-webhook/upstream/overlays/cert-manager
+        - ../../ai-conductor-configs/apps/admission-webhook
     helm: 
       paths: ../../charts/apps/admission-webhook
   validations:
@@ -232,7 +232,7 @@ jupyter-web-app:
   installation_options:
     kustomize:
       paths: 
-        - ../../awsconfigs/apps/jupyter-web-app
+        - ../../ai-conductor-configs/apps/jupyter-web-app
     helm: 
       paths: ../../charts/apps/jupyter-web-app
   validations:
@@ -247,7 +247,7 @@ notebook-controller:
   installation_options:
     kustomize:
       paths: 
-        - ../../awsconfigs/apps/notebook-controller
+        - ../../ai-conductor-configs/apps/notebook-controller
     helm: 
       paths: ../../charts/apps/notebook-controller
   validations:
@@ -262,7 +262,7 @@ volumes-web-app:
   installation_options:
     kustomize:
       paths: 
-        - ../../upstream/apps/volumes-web-app/upstream/overlays/istio
+        - ../../ai-conductor-configs/apps/volumes-web-app
     helm: 
       paths: ../../charts/apps/volumes-web-app
   validations:
@@ -277,7 +277,7 @@ training-operator:
   installation_options:
     kustomize:
       paths: 
-        - ../../upstream/apps/training-operator/upstream/overlays/kubeflow
+        - ../../ai-conductor-configs/apps/training-operator
     helm: 
       paths: ../../charts/apps/training-operator
   validations:
@@ -292,7 +292,7 @@ katib:
   installation_options:
     kustomize: 
       paths:
-        - ../../awsconfigs/apps/katib-external-db-with-kubeflow
+        - ../../ai-conductor-configs/apps/katib
     helm:
       paths: ../../charts/apps/katib/katib-external-db-with-kubeflow
   validations:
@@ -307,7 +307,7 @@ tensorboard-controller:
   installation_options:
     kustomize: 
       paths:
-        - ../../upstream/apps/tensorboard/tensorboard-controller/upstream/overlays/kubeflow
+        - ../../ai-conductor-configs/apps/tensorboard/tensorboard-controller
     helm:
       paths: ../../charts/apps/tensorboard-controller
   validations:
@@ -322,7 +322,7 @@ tensorboards-web-app:
   installation_options:
     kustomize:
       paths:  
-        - ../../upstream/apps/tensorboard/tensorboards-web-app/upstream/overlays/istio
+        - ../../ai-conductor-configs/apps/tensorboard/tensorboards-web-app
     helm: 
       paths: ../../charts/apps/tensorboards-web-app
   validations:
@@ -337,7 +337,7 @@ profiles-and-kfam:
   installation_options:
     kustomize:
       paths: 
-        - ../../upstream/apps/profiles/upstream/overlays/kubeflow
+        - ../../ai-conductor-configs/apps/profiles
     helm: 
       paths: ../../charts/apps/profiles-and-kfam
   validations: 
@@ -352,7 +352,7 @@ user-namespace:
   installation_options:
     kustomize:
       paths: 
-        - ../../awsconfigs/common/user-namespace/overlay
+        - ../../upstream/common/user-namespace/base
     helm: 
       paths: ../../charts/common/user-namespace
 
@@ -361,9 +361,9 @@ aws-secrets-manager:
   installation_options:
     kustomize: 
       paths:
-        - ../../awsconfigs/common/aws-secrets-manager/rds
+        - ../../ai-conductor-configs/common/aws-secrets-manager
     helm:
-      paths: ../../charts/common/aws-secrets-manager/rds-only
+      paths: ../../charts/common/aws-secrets-manager/rds-s3
   validations:
     pods:
       namespace: kubeflow
@@ -371,20 +371,3 @@ aws-secrets-manager:
         - key: app
           value: aws-secrets-sync
 
-
-ack-sagemaker-controller:
-  installation_options:
-    kustomize: 
-      paths:
-        - ../../awsconfigs/common/ack-sagemaker-controller
-    helm: 
-      repo: remote
-
-#AWS Telemetry (Optional)
-aws-telemetry:
-  installation_options:
-    kustomize:
-      paths: 
-        - ../../awsconfigs/common/aws-telemetry
-    helm: 
-      paths: ../../charts/common/aws-telemetry

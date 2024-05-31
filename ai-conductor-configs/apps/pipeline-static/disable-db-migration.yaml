@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metadata-grpc-deployment
+spec:
+  template:
+    spec:
+      containers:
+      - name: container
+        args: ["--grpc_port=8080",
+               "--enable_database_upgrade=false",
+               "--metadata_store_server_config_file=/etc/ml-metadata/server_config"
+              ]
+        volumeMounts:
+        - name: metadata-config-volume
+          mountPath: /etc/ml-metadata
+      volumes:
+      - name: metadata-config-volume
+        configMap:
+          name: pipeline-install-config
+          items:
+          - key: server_config
+            path: server_config

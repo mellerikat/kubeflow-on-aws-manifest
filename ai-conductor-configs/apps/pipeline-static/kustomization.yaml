@@ -1,0 +1,32 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../awsconfigs/apps/pipeline-static/
+configMapGenerator:
+  - name: pipeline-install-config
+    namespace: kubeflow
+    env: params.env
+    behavior: merge
+  - files:
+      - server_config
+    namespace: kubeflow
+    name: pipeline-install-config
+    behavior: merge
+patches:
+  - path: deployment-add-node-selector.yaml
+    target:
+      kind: Deployment
+  - path: statefulset-add-node-selector.yaml
+    target:
+      kind: Statefulset
+  - path: disable-db-migration.yaml
+    target:
+      kind: Deployment
+      labelSelector: "component=metadata-grpc-server"
+images:
+  - name: public.ecr.aws/kubeflow-on-aws/ml-pipeline/api-server
+    newName: 123456789012.dkr.ecr.region.amazonaws.com/ecr-repo-regionAlias-infraName-deployEnv/ml-pipeline/api-server
+    newTag: 2.0.3
+  - name: gcr.io/ml-pipeline/cache-server
+    newName: 123456789012.dkr.ecr.region.amazonaws.com/ecr-repo-regionAlias-infraName-deployEnv/ml-pipeline/cache-server
+    newTag: 2.0.3

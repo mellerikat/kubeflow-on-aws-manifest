@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    sidecar.istio.io/inject: "false"
+  name: aws-secrets-sync
+  namespace: kubeflow
+spec:
+  selector:
+    matchLabels:
+      app: aws-secrets-sync
+  template:
+    metadata:
+      labels:
+        app: aws-secrets-sync
+    spec:
+      containers:
+      - image: public.ecr.aws/xray/aws-xray-daemon:latest
+        name: secrets
+        volumeMounts:
+        - mountPath: /mnt/s3-store
+          name: s3-secret
+          readOnly: true
+        - mountPath: /mnt/rds-store
+          name: rds-secret
+          readOnly: true
+      serviceAccountName: kubeflow-secrets-manager-sa
+      volumes:
+      - csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: s3-secret
+        name: s3-secret
+      - csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: rds-secret
+        name: rds-secret
+---
+apiVersion: secrets-store.csi.x-k8s.io/v1alpha1
+kind: SecretProviderClass
+metadata:
+  name: rds-secret
+  namespace: kubeflow
+spec:
+  parameters:
+    objects: |
+      - objectName: "/parameter/region/infra/deploy/rds"
+        objectType: "secretsmanager"
+        jmesPath:
+            - path: "username"
+              objectAlias: "user"
+            - path: "password"
+              objectAlias: "pass"
+            - path: "host"
+              objectAlias: "host"
+            - path: "database"
+              objectAlias: "database"
+            - path: "port"
+              objectAlias: "port"
+  provider: aws
+  secretObjects:
+  - data:
+    - key: username
+      objectName: user
+    - key: password
+      objectName: pass
+    - key: host
+      objectName: host
+    - key: database
+      objectName: database
+    - key: port
+      objectName: port
+    secretName: mysql-secret
+    type: Opaque
+---
+apiVersion: secrets-store.csi.x-k8s.io/v1alpha1
+kind: SecretProviderClass
+metadata:
+  name: s3-secret
+  namespace: kubeflow
+spec:
+  parameters:
+    objects: "- objectName: \"/parameter/region/infra/deploy/s3\"\n  objectType:
+      \"secretsmanager\"\n  jmesPath:\n      - path: \"accesskey\"\n        objectAlias:
+      \"access\"\n      - path: \"secretkey\"\n        objectAlias: \"secret\"           \n"
+  provider: aws
+  secretObjects:
+  - data:
+    - key: accesskey
+      objectName: access
+    - key: secretkey
+      objectName: secret
+    secretName: mlpipeline-minio-artifact
+    type: Opaque

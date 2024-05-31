@@ -8,6 +8,9 @@ configMapGenerator:
   behavior: replace
   files:
   - config
+- name: pipeline-install-config
+  env: params.env
+  behavior: merge
 generatorOptions:
   disableNameSuffixHash: true
 patchesStrategicMerge:

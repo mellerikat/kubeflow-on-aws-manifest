@@ -4,6 +4,7 @@ artifactRepository:
     s3: {
         bucket: $(kfp-artifact-bucket-name),
         keyPrefix: artifacts,
+        region: 'ap-norteast-2',
         insecure: false,
         useSDKCreds: true,
         keyFormat: "artifacts/{{workflow.name}}/{{workflow.creationTimestamp.Y}}/{{workflow.creationTimestamp.m}}/{{workflow.creationTimestamp.d}}/{{pod.name}}"
