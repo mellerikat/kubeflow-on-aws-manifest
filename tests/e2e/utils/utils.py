@@ -185,6 +185,24 @@ def curl_file_to_path(file, path):
     subprocess.call(cmd)
 
 
+def custom_kustomize(path):
+    if "oidc-authservice" in path: 
+        with open(f'{path}/kustomization.yaml', 'r') as file:
+            lines = file.readlines()
+        get_storageclass = subprocess.run("kubectl get storageclass", shell=True, capture_output=True, text=True)
+        is_storageclass_exist = "(default)" in get_storageclass.stdout
+        if is_storageclass_exist:
+            lines = [line for line in lines if 'default-storage' not in line]
+            with open(f'{path}/kustomization.yaml', 'w') as file:
+                file.writelines(lines)
+        else:
+            if not any(['default-storage' in line for line in lines]):
+                resources_index = next((i for i, value in enumerate(lines) if 'resources' in value), None)
+                lines.insert(resources_index+1, '  - add-default-storage-class.yaml\n')
+                with open(f'{path}/kustomization.yaml', 'w') as file:
+                    file.writelines(lines)
+
+
 def apply_kustomize(path, crds=None):
     """
     Equivalent to:
@@ -194,6 +212,7 @@ def apply_kustomize(path, crds=None):
     but creates a temporary file instead of piping.
     """
     with tempfile.NamedTemporaryFile() as tmp:
+        custom_kustomize(path=path)
         build_retcode = subprocess.call(f"kustomize build {path} -o {tmp.name}".split())
         assert build_retcode == 0
         apply_retcode = subprocess.call(f"kubectl apply -f {tmp.name}".split())
@@ -213,15 +232,24 @@ def install_helm(chart_name, path, namespace=None):
     helm upgrade --install <chart_name> <path>
 
     """
+    # Initialize the base command
+    base_command = f"helm upgrade --install {chart_name} {path}"
 
+    # Handle the special case for 'oidc-authservice'
+    if chart_name == 'oidc-authservice':
+        get_storageclass = subprocess.run("kubectl get storageclass", shell=True, capture_output=True, text=True)
+        is_storageclass_exist = "(default)" in get_storageclass.stdout
+
+        # Conditionally add the storageclass flag
+        if is_storageclass_exist:
+            base_command += " --set storageclass.enabled=false"
+
+    # Add namespace if provided
     if namespace:
-        install_retcode = subprocess.call(
-            f"helm upgrade --install {chart_name} {path} --namespace {namespace}".split()
-        )
-    else:
-        install_retcode = subprocess.call(
-            f"helm upgrade --install {chart_name} {path}".split()
-        )
+        base_command += f" --namespace {namespace}"
+    print(base_command)
+    # Execute the command
+    install_retcode = subprocess.call(base_command.split())
     assert install_retcode == 0
 
 

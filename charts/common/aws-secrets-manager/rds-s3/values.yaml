@@ -2,3 +2,6 @@ rds:
   secretName: 
 s3:
   secretName: 
+serviceAccount:
+  awsAccountId: 123456789012
+  roleName: role-infraname-deployenv-kubeflow-secrets-manager-sa

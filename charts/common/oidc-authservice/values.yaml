@@ -1,2 +1,2 @@
-null
-...
+storageclass:
+  enabled: true

@@ -24,7 +24,7 @@ INSTALLATION_CONFIG_COGNITO_RDS_S3 = (
 INSTALLATION_CONFIG_S3_ONLY_STATIC = (
     "./resources/installation_config/s3-only-static.yaml"
 )
-INSTALLATION_CONFIG_RDS_S3_STATIC = "./resources/installation_config/rds-s3-static.yaml"
+INSTALLATION_CONFIG_RDS_S3_STATIC = "./resources/installation_config/ai-conductor.yaml"
 INSTALLATION_CONFIG_COGNITO_RDS_S3_STATIC = (
     "./resources/installation_config/cognito-rds-s3-static.yaml"
 )
